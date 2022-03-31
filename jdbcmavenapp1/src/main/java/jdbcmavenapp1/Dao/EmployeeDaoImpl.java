@@ -101,14 +101,57 @@ public class EmployeeDaoImpl implements EmployeeDao {
 
 	@Override
 	public boolean deleteEmployeeById(int empId) throws EmployeeException {
+		boolean result = false;
+		
+		try (Connection conn = ConnectionClass.connect()) {
 
-		return false;
+			PreparedStatement ps = conn.prepareStatement("delete from employee where eid=?");
+			ps.setInt(1, empId);
+
+			int r = ps.executeUpdate();
+			
+			if(r>0) {
+				result = true;
+			}
+			else {
+				throw new EmployeeException("Employee not found");
+			}
+
+			
+
+		} catch (SQLException s) {
+			throw new EmployeeException(s.getMessage());
+		}
+
+		return result;
 	}
 
 	@Override
 	public String giveBonusToEmployee(int empId, int amount) throws EmployeeException {
+		
+		String result = "Employee Not Found";
+		
+		
+		try(Connection conn = ConnectionClass.connect()){
+			
+			PreparedStatement ps = conn.prepareStatement("update employee set salary = salary+? where eid =?");
+			ps.setInt(1, amount);
+			ps.setInt(2, empId);
+			
+			int res = ps.executeUpdate();
+			
+			if(res>0) {
+				result = "Bonus provided...";
+			}
+			else {
+				throw new EmployeeException("Employee not found");
+			}
+			
+		}catch(SQLException s) {
+			throw new EmployeeException(s.getMessage());
+		}
 
-		return null;
+		return result;
 	}
 
 }
