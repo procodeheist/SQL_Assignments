@@ -1,14 +1,16 @@
 package CollectionMap;
 
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Map.Entry;
+import java.util.Set;
 
 
-public class Mobile {
+public class Mobile{
 	
 	HashMap<String, ArrayList<String>> mobiles = new HashMap<>();
-	ArrayList<String> modelList = new ArrayList<>();
+	
 	
 	
 	@Override
@@ -20,26 +22,38 @@ public class Mobile {
 
 		String message = "Mobile added successfully";
 
-		// this method will take a string as a company name and its model as an
-		// //argument.
-		// ex: "apple", "Iphone13"
-		// add the company as key and its model as an element of ArrayList in the above
-		// //mobiles HashMap.
-		// if the company name already exists then their model should be added to the
-		// //existing list.
-		// This method should return a message "Mobile added successfully" after
-		// //adding a mobile.
+		Set<Entry<String, ArrayList<String>>> keySet = mobiles.entrySet();
 		
-		modelList.add(model);
-		mobiles.put(company, modelList);
+		boolean flag=true;
+		for(Entry<String, ArrayList<String>> str: keySet ) {
+			if(str.getKey().equals(company)) {
+				flag = false;
+				str.getValue().add(model);
+			}
+		}
+		
+		if(flag) {
+			ArrayList<String> modelList = new ArrayList<>();
+			modelList.add(model);
+			mobiles.put(company, modelList);
+		}
 
 		return message;
 	}
 
 	public ArrayList<String> getModels(String company) {
-		ArrayList<String> result = null;
-		// This method return the list of all the models of the supplied company
-		// if we supply any invalid company name then it should return null value
+		ArrayList<String> result = new ArrayList<>();
+		boolean flag=true;
+		Set<Entry<String, ArrayList<String>>> keySet = mobiles.entrySet();
+		for(Entry<String, ArrayList<String>> str: keySet ) {
+			if(str.getKey().equalsIgnoreCase(company)) {
+				result = str.getValue();
+				flag=false;
+			}
+		}
+		if(flag)
+			result = null;
+		
 
 		return result;
 	}
@@ -48,20 +62,14 @@ public class Mobile {
 		
 		Mobile mobile = new Mobile();
 		
-		String msg = mobile.addMobile("Apple", "iPhone13Pro");
-		String msg2 = mobile.addMobile("Samsung", "S22");
-		String msg3 = mobile.addMobile("Samsung", "S10+");
-		String msg4 = mobile.addMobile("Apple", "iPhone12Pro");
+		mobile.addMobile("apple", "iPhone12");
+		mobile.addMobile("apple", "iPhone13");
+		mobile.addMobile("apple", "iPhone14");
+		mobile.addMobile("apple", "iPhone15");
 		
-		
+		List<String> modelList = mobile.getModels("Apple");
 		
 		System.out.println(mobile.mobiles);
+		System.out.println(modelList);
 	}
-
-	
-
-
-
-	
-
 }
