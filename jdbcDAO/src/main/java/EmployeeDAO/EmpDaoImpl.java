@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
 import EmpException.EmployeeException;
@@ -53,7 +54,7 @@ public class EmpDaoImpl implements EmployeeDAOInter {
 			if(rs.next()) {
 				int id = rs.getInt("empID");
 				String name = rs.getString("name");
-				String address = rs.getString("address");
+				String address = rs.getString("adress");
 				int salary = rs.getInt("salary");
 				
 				result = new Employee(id,name,address,salary);
@@ -73,15 +74,58 @@ public class EmpDaoImpl implements EmployeeDAOInter {
 	}
 
 	@Override
-	public List<Employee> getAllEmployees() {
+	public List<Employee> getAllEmployees(){
 		// TODO Auto-generated method stub
-		return null;
+		List<Employee> employeeList = new ArrayList<>();
+		
+		try (Connection conn = MyConnection.connect()) {
+
+			PreparedStatement ps = conn.prepareStatement("select * from employee ");
+			
+			
+			ResultSet rs = ps.executeQuery();
+			
+			while(rs.next()) {
+				int id = rs.getInt("empID");
+				String name = rs.getString("name");
+				String address = rs.getString("adress");
+				int salary = rs.getInt("salary");
+				employeeList.add(new Employee(id,name,address,salary));
+				
+			}
+			
+		} catch (SQLException e) {
+
+			System.out.println(e.getMessage());
+		}
+		
+		return employeeList;
 	}
 
 	@Override
 	public String deleteEmployee(int empId) throws EmployeeException {
 		// TODO Auto-generated method stub
-		return null;
-	}
+		String result = "Not Deleted";
+		try (Connection conn = MyConnection.connect()) {
 
+			PreparedStatement ps = conn.prepareStatement("delete from employee where empID = ?");
+			ps.setInt(1, empId);
+			
+			int rs = ps.executeUpdate();
+			
+			if(rs>0) {
+				result = "Deleted";
+			}
+			else {
+				throw new EmployeeException("Employee not found");
+			}
+			
+		
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			throw new EmployeeException(e.getMessage());
+		}
+		
+		return result;
+	}
 }
