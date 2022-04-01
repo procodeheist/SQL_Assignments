@@ -1,4 +1,4 @@
-GitRepositoriesView.GitDirectories=/home/raj/Documents/MasaiSTS/.git\:
-GitRepositoriesView.GitDirectories.relative=.git\:
+GitRepositoriesView.GitDirectories=/home/raj/Documents/MasaiSTS/.git\:/home/raj/Documents/java/dailyAssignments/.git\:
+GitRepositoriesView.GitDirectories.relative=.git\:/home/raj/Documents/java/dailyAssignments/.git\:
 core_autoIgnoreDerivedResources=false
 eclipse.preferences.version=1
