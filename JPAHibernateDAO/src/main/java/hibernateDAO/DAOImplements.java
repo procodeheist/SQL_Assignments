@@ -48,12 +48,7 @@ public class DAOImplements implements HibernateDAOInterface {
 
 	@Override
 	public String giveBonusToEmployee(int empId, int bonus) {
-		
-		return null;
-	}
-
-	@Override
-	public boolean deleteEmployee(int empId) {
+		String res = "Bonus added succefully";
 		
 		EntityManager em = MyEntity.provideEntityConnection();
 		
@@ -61,18 +56,63 @@ public class DAOImplements implements HibernateDAOInterface {
 		
 		if(emp != null) {
 			em.getTransaction().begin();
-			em.de
+			emp.setSalary(emp.getSalary()+bonus);
+			em.getTransaction().commit();
+		}
+		else {
+			res = "Not added...";
+		}
+		
+		
+		
+		em.close();
+		
+		
+		return res;
+		
+	}
+
+	@Override
+	public boolean deleteEmployee(int empId) {
+		
+		boolean flag = true;
+		EntityManager em = MyEntity.provideEntityConnection();
+		
+		Employee emp = em.find(Employee.class, empId);
+		
+		if(emp != null) {
+			em.getTransaction().begin();
+			em.remove(emp);
+			em.getTransaction().commit();
+		}else {
+			flag = false;
 		}
 		
 		em.close();
 		
-		return true;
+		return flag;
 	}
 
 	@Override
 	public String[] getNameAndAddress(int empId) {
+		 
+		String[] empDetails = new String[2];
 		
-		return null;
+		EntityManager em = MyEntity.provideEntityConnection();
+		
+		Employee emp = em.find(Employee.class, empId);
+		
+		if(emp != null) {
+			empDetails[0] = emp.getName();
+			empDetails[1] = emp.getAddress();
+		}
+		
+		
+		
+		em.close();
+		
+		
+		return empDetails;
 	}
 
 	@Override
